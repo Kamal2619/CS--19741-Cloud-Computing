@@ -1,0 +1,10 @@
+body { font-family: system-ui, Arial; background:#f6f8fb; color:#111; }
+.container { max-width:520px; margin:60px auto; padding:28px; background:white; border-radius:8px; box-shadow:0 6px 18px rgba(20,30,60,0.08); }
+h1 { margin:0 0 8px; }
+button { padding:10px 16px; border-radius:6px; border: none; cursor:pointer; }
+#loginBtn { background:#0078d4; color:white; }
+#logoutBtn { background:#d9534f; color:white; }
+label { display:block; margin:12px 0; }
+input,select,textarea { width:100%; padding:8px; border-radius:6px; border:1px solid #ddd; }
+.actions { margin-top:12px; }
+a { color:#0078d4; }

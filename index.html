@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Eduecho — Login</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="container">
+      <h1>Eduecho</h1>
+      <p>
+        Simple student feedback system. Login with your Azure account to
+        continue.
+      </p>
+
+      <div id="not-signed-in">
+        <button id="loginBtn">Login with Azure</button>
+      </div>
+
+      <div id="signed-in" style="display: none">
+        <p id="welcome"></p>
+        <a id="goFeedback" href="feedback.html">Open Feedback Form</a
+        ><br /><br />
+        <button id="logoutBtn">Logout</button>
+      </div>
+
+      <footer>
+        <small>Built for demo. Eduecho</small>
+      </footer>
+    </div>
+
+    <script src="app.js"></script>
+  </body>
+</html>
