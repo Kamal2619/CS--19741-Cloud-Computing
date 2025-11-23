@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>EduEcho - Student Feedback System</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+      }
+      .container {
+        max-width: 550px;
+        width: 100%;
+      }
+      .card {
+        background: white;
+        padding: 40px;
+        border-radius: 16px;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+      }
+      h1 {
+        text-align: center;
+        color: #667eea;
+        margin-bottom: 10px;
+        font-size: 32px;
+      }
+      .subtitle {
+        text-align: center;
+        color: #666;
+        margin-bottom: 30px;
+        font-size: 14px;
+      }
+      input,
+      textarea {
+        width: 100%;
+        padding: 12px;
+        margin-bottom: 15px;
+        border: 2px solid #e0e0e0;
+        border-radius: 8px;
+        font-size: 14px;
+        font-family: inherit;
+        transition: border-color 0.3s;
+      }
+      input:focus,
+      textarea:focus {
+        outline: none;
+        border-color: #667eea;
+      }
+      button {
+        width: 100%;
+        padding: 14px;
+        background: #667eea;
+        color: white;
+        border: none;
+        border-radius: 8px;
+        font-size: 16px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s;
+      }
+      button:hover {
+        background: #5568d3;
+        transform: translateY(-2px);
+      }
+      .hidden {
+        display: none;
+      }
+      .toast {
+        position: fixed;
+        bottom: 30px;
+        right: 30px;
+        padding: 16px 24px;
+        background: #10b981;
+        color: white;
+        border-radius: 8px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        opacity: 0;
+        transition: opacity 0.3s;
+        z-index: 1000;
+      }
+      .toast.show {
+        opacity: 1;
+      }
+      .toast.error {
+        background: #ef4444;
+      }
+      .stats {
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr;
+        gap: 12px;
+        margin-top: 20px;
+      }
+      .stat-card {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        padding: 15px;
+        border-radius: 8px;
+        text-align: center;
+        color: white;
+      }
+      .stat-value {
+        font-size: 24px;
+        font-weight: 700;
+      }
+      .stat-label {
+        font-size: 11px;
+        margin-top: 5px;
+        opacity: 0.9;
+      }
+      .welcome {
+        background: #f0f9ff;
+        padding: 12px;
+        border-radius: 8px;
+        margin-bottom: 20px;
+        color: #0369a1;
+        font-size: 14px;
+      }
+      .logout-btn {
+        background: #ef4444;
+        margin-top: 10px;
+      }
+      .logout-btn:hover {
+        background: #dc2626;
+      }
+      .tabs {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 20px;
+      }
+      .tab {
+        flex: 1;
+        padding: 10px;
+        background: #f5f5f5;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        font-weight: 600;
+        transition: all 0.3s;
+      }
+      .tab.active {
+        background: #667eea;
+        color: white;
+      }
+      .tab-content {
+        display: none;
+      }
+      .tab-content.active {
+        display: block;
+      }
+      .feedback-list {
+        max-height: 200px;
+        overflow-y: auto;
+        margin-top: 15px;
+      }
+      .feedback-item {
+        background: #f8f9fa;
+        padding: 10px;
+        border-radius: 6px;
+        margin-bottom: 8px;
+        font-size: 13px;
+      }
+      .feedback-meta {
+        color: #666;
+        font-size: 11px;
+        margin-top: 5px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <!-- Login Screen -->
+      <div id="loginScreen" class="card">
+        <h1>🎓 EduEcho</h1>
+        <p class="subtitle">Cloud-Based Student Feedback System</p>
+        <input type="text" id="username" placeholder="Username" value="kamal" />
+        <input
+          type="password"
+          id="password"
+          placeholder="Password"
+          value="test123"
+        />
+        <button onclick="login()">Login</button>
+        <p
+          style="
+            text-align: center;
+            margin-top: 15px;
+            font-size: 12px;
+            color: #999;
+          "
+        >
+          Demo: kamal/test123 or student/demo123
+        </p>
+      </div>
+
+      <!-- Main Screen -->
+      <div id="mainScreen" class="card hidden">
+        <h1>📝 Feedback Portal</h1>
+        <div id="welcome" class="welcome"></div>
+
+        <div class="tabs">
+          <button class="tab active" onclick="switchTab('submit')">
+            Submit
+          </button>
+          <button class="tab" onclick="switchTab('view')">View</button>
+        </div>
+
+        <!-- Submit Tab -->
+        <div id="submitTab" class="tab-content active">
+          <textarea
+            id="feedbackText"
+            rows="5"
+            placeholder="Enter your feedback here..."
+          ></textarea>
+          <button onclick="submitFeedback()">Submit Feedback</button>
+        </div>
+
+        <!-- View Tab -->
+        <div id="viewTab" class="tab-content">
+          <div class="feedback-list" id="feedbackList">
+            <p style="color: #999; text-align: center">No feedback yet</p>
+          </div>
+        </div>
+
+        <div class="stats">
+          <div class="stat-card">
+            <div class="stat-value" id="totalUsers">25</div>
+            <div class="stat-label">Users</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-value" id="feedbackCount">0</div>
+            <div class="stat-label">Feedbacks</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-value">4.2</div>
+            <div class="stat-label">Avg Rating</div>
+          </div>
+        </div>
+
+        <button class="logout-btn" onclick="logout()">Logout</button>
+      </div>
+    </div>
+
+    <div id="toast" class="toast"></div>
+
+    <script>
+      let currentUser = null;
+      let feedbacks = JSON.parse(localStorage.getItem("feedbacks")) || [];
+
+      const users = [
+        {
+          id: 1,
+          username: "kamal",
+          password: "test123",
+          name: "Kamal JR",
+          roll: "220701117",
+          dept: "CSE",
+        },
+        {
+          id: 2,
+          username: "student",
+          password: "demo123",
+          name: "Demo Student",
+          roll: "220701001",
+          dept: "IT",
+        },
+      ];
+
+      function showToast(message, isError = false) {
+        const toast = document.getElementById("toast");
+        toast.textContent = message;
+        toast.className = "toast show" + (isError ? " error" : "");
+        setTimeout(() => toast.classList.remove("show"), 3000);
+      }
+
+      function switchTab(tab) {
+        document
+          .querySelectorAll(".tab")
+          .forEach((t) => t.classList.remove("active"));
+        document
+          .querySelectorAll(".tab-content")
+          .forEach((t) => t.classList.remove("active"));
+
+        if (tab === "submit") {
+          document.querySelectorAll(".tab")[0].classList.add("active");
+          document.getElementById("submitTab").classList.add("active");
+        } else {
+          document.querySelectorAll(".tab")[1].classList.add("active");
+          document.getElementById("viewTab").classList.add("active");
+          loadFeedbacks();
+        }
+      }
+
+      function login() {
+        const username = document.getElementById("username").value;
+        const password = document.getElementById("password").value;
+
+        const user = users.find(
+          (u) => u.username === username && u.password === password
+        );
+
+        if (user) {
+          currentUser = user;
+          document.getElementById("loginScreen").classList.add("hidden");
+          document.getElementById("mainScreen").classList.remove("hidden");
+          document.getElementById(
+            "welcome"
+          ).textContent = `Welcome, ${user.name} (${user.roll}) - ${user.dept}`;
+          showToast("Login successful!");
+          updateStats();
+        } else {
+          showToast("Invalid credentials", true);
+        }
+      }
+
+      function submitFeedback() {
+        const feedbackText = document.getElementById("feedbackText").value;
+
+        if (!feedbackText.trim()) {
+          showToast("Please enter feedback", true);
+          return;
+        }
+
+        const feedback = {
+          id: Date.now(),
+          studentId: currentUser.id,
+          studentName: currentUser.name,
+          text: feedbackText,
+          timestamp: new Date().toISOString(),
+        };
+
+        feedbacks.push(feedback);
+        localStorage.setItem("feedbacks", JSON.stringify(feedbacks));
+
+        showToast("Feedback submitted successfully!");
+        document.getElementById("feedbackText").value = "";
+        updateStats();
+      }
+
+      function loadFeedbacks() {
+        const list = document.getElementById("feedbackList");
+
+        if (feedbacks.length === 0) {
+          list.innerHTML =
+            '<p style="color:#999;text-align:center">No feedback yet</p>';
+          return;
+        }
+
+        list.innerHTML = feedbacks
+          .slice(-5)
+          .reverse()
+          .map(
+            (f) => `
+                <div class="feedback-item">
+                    <div>${f.text}</div>
+                    <div class="feedback-meta">By ${f.studentName} • ${new Date(
+              f.timestamp
+            ).toLocaleDateString()}</div>
+                </div>
+            `
+          )
+          .join("");
+      }
+
+      function updateStats() {
+        document.getElementById("feedbackCount").textContent = feedbacks.length;
+      }
+
+      function logout() {
+        currentUser = null;
+        document.getElementById("mainScreen").classList.add("hidden");
+        document.getElementById("loginScreen").classList.remove("hidden");
+        showToast("Logged out successfully");
+      }
+
+      // Initialize
+      updateStats();
+    </script>
+  </body>
+</html>
